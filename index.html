@@ -70,6 +70,27 @@
       background: #d0d0d0;
     }
 
+    .btn.playing,
+    .intro.playing {
+      animation: pulse 1.4s ease-in-out infinite;
+      background: #d0d0d0;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,255,255,0.28);
+      }
+      50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 18px rgba(255,255,255,0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,255,255,0);
+      }
+    }
+
     .status {
       margin-top: 4vh;
       color: #ccc;
@@ -82,20 +103,20 @@
 
     <h1>Historische Reiseberichte<br>aus unserer Region</h1>
 
-    <button class="intro" onclick="playAudio('r_infos.mp3', 'Einführung')">
+    <button class="intro" onclick="playAudio('r_infos.mp3', 'Einführung', this)">
       Einführung
     </button>
 
     <div class="grid">
-      <button class="btn" onclick="playAudio('r_fynes.mp3', 'Fynes Morrison (1591)')">
+      <button class="btn" onclick="playAudio('r_fynes.mp3', 'Fynes Morrison (1591)', this)">
         Fynes Morrison<br>(1591)
       </button>
 
-      <button class="btn" onclick="playAudio('r_michael.mp3', 'Michael Frank (1590)')">
+      <button class="btn" onclick="playAudio('r_michael.mp3', 'Michael Frank (1590)', this)">
         Michael Frank<br>(1590)
       </button>
 
-      <button class="btn" onclick="playAudio('r_taylor.mp3', 'John Taylor (1616)')">
+      <button class="btn" onclick="playAudio('r_taylor.mp3', 'John Taylor (1616)', this)">
         John Taylor<br>(1616)
       </button>
     </div>
@@ -109,19 +130,37 @@
   <script>
     const player = document.getElementById('player');
     const status = document.getElementById('status');
+    const buttons = document.querySelectorAll('.btn, .intro');
 
-    function playAudio(file, label) {
+    function resetButtons() {
+      buttons.forEach(btn => btn.classList.remove('playing'));
+    }
+
+    function playAudio(file, label, element) {
+      resetButtons();
+      if (element) element.classList.add('playing');
       player.src = file;
+      player.load();
       player.currentTime = 0;
-      player.play();
-      status.textContent = 'Läuft: ' + label;
+
+      const playPromise = player.play();
+
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          status.textContent = 'Läuft: ' + label;
+        }).catch(err => {
+          console.error('Playback-Fehler:', err);
+          status.textContent = 'Audio konnte nicht gestartet werden.';
+          alert('Fehler beim Abspielen. Prüfe Dateinamen und Speicherort.');
+        });
+      }
     }
 
     player.addEventListener('ended', () => {
+      resetButtons();
       status.textContent = 'Fertig abgespielt.';
     });
   </script>
 
 </body>
 </html>
-
