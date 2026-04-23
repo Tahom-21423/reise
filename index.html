@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Historische Reiseberichte</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: Calibri, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .screen {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 5vh 4vw;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #fff;
+      font-weight: 400;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      text-align: center;
+      margin-bottom: 6vh;
+      line-height: 1.2;
+    }
+
+    .intro {
+      width: 80%;
+      max-width: 1200px;
+      background: #b3b3b3;
+      color: #000;
+      font-size: clamp(2rem, 3vw, 3rem);
+      padding: 30px;
+      margin-bottom: 5vh;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      width: 80%;
+      max-width: 1200px;
+    }
+
+    .btn {
+      background: #b3b3b3;
+      color: #000;
+      border: none;
+      padding: 30px 20px;
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      text-align: center;
+      cursor: pointer;
+      min-height: 140px;
+    }
+
+    .btn:active {
+      background: #d0d0d0;
+    }
+
+    .status {
+      margin-top: 4vh;
+      color: #ccc;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+
+    <h1>Historische Reiseberichte<br>aus unserer Region</h1>
+
+    <button class="intro" onclick="playAudio('r_info.mp3', 'Einführung')">
+      Einführung
+    </button>
+
+    <div class="grid">
+      <button class="btn" onclick="playAudio('r_fynes.mp3', 'Fynes Morrison (1591)')">
+        Fynes Morrison<br>(1591)
+      </button>
+
+      <button class="btn" onclick="playAudio('r_michael.mp3', 'Michael Frank (1590)')">
+        Michael Frank<br>(1590)
+      </button>
+
+      <button class="btn" onclick="playAudio('r_taylor.mp3', 'John Taylor (1616)')">
+        John Taylor<br>(1616)
+      </button>
+    </div>
+
+    <div class="status" id="status">Bitte anklicken!</div>
+
+  </div>
+
+  <audio id="player"></audio>
+
+  <script>
+    const player = document.getElementById('player');
+    const status = document.getElementById('status');
+
+    function playAudio(file, label) {
+      player.src = file;
+      player.currentTime = 0;
+      player.play();
+      status.textContent = 'Läuft: ' + label;
+    }
+
+    player.addEventListener('ended', () => {
+      status.textContent = 'Fertig abgespielt.';
+    });
+  </script>
+
+</body>
+</html>
+
